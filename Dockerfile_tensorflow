@@ -1,4 +1,4 @@
-From nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
+From nvidia/cuda:8.0-cudnn6-devel-ubuntu16.04
 
 RUN set -x && \
     mkdir /build && cd /build && \
@@ -7,8 +7,11 @@ RUN set -x && \
     wget https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tgz && \
     tar zxf Python-3.6.1.tgz && cd Python-3.6.1 && mkdir build && cd build && ../configure && make -j install && ldconfig && cd /build && \
     ln -s /usr/local/bin/python3 /usr/local/bin/python && ln -s /usr/local/bin/pip3 /usr/local/bin/pip && \
-    pip install numpy more_itertools && pip install --upgrade tensorflow-gpu==1.2.0 && \
+    pip install numpy more_itertools && pip install --upgrade tensorflow-gpu==1.4 && \
     pip install scipy scikit-learn scikit-image && \
     cd / && rm -rf /build && ldconfig && \
-    echo "export CUDA_VISIBLE_DEVICES=0" >> ~/.bashrc
+    apt-get install -y language-pack-ja && localedef -i ja_JP -c -f UTF-8 -A /usr/share/locale/locale.alias ja_JP.UTF-8 && ldconfig
+ENV LANG ja_JP.UTF-8
+ENV LANGUAGE ja_JP.UTF-8
+ENV CUDA_VISIBLE_DEVICES 0
 
