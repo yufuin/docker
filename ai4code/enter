@@ -1,0 +1,15 @@
+#!/bin/bash
+cuda_vdevice="CUDA_VISIBLE_DEVICES=0"
+if [ $# -ge 1 ]; then
+    if [[ ${1} =~ ^[0-9]+$ ]]; then
+        cuda_vdevice="CUDA_VISIBLE_DEVICES=${1}"
+    fi
+fi
+docker run -it --rm --gpus all \
+    --env ${cuda_vdevice} \
+    --env TOKENIZERS_PARALLELISM=false \
+    -v ~/desk/kaggle/:/root/desk/kag/ \
+    --workdir /root/desk/kag/ai4code/ \
+    -v ~/.cache:/root/.cache \
+    -v ~/data:/root/data \
+    kaggle
