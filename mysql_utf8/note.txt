@@ -1,0 +1,7 @@
+ optunaを使うにあたってmysqlclientをpip installしておく必要がある
+   参考：https://blog.amedama.jp/entry/2018/12/06/015217
+  mysqlclientのインストールで/usr/bin/mysql_configが要求される
+    libmysqlclient-devをインストールすることで解決する．mysql-serverのインストールは不要．
+      参考：https://review-of-my-life.blogspot.com/2017/12/python-mysqloserror-mysqlconfig-not.html
+  optunaのストレージの書き方
+    "mysql://USER:PASSWORD@localhost:PORT/DATABASE_NAME"
