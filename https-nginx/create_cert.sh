@@ -1,21 +1,32 @@
-# 最終生成ファイル
+#! /usr/bin/env bash
+set -e
+# usage:
+# ORG_NAME=MyOrgName SERVER_NAME=localhost ALT_IP=127.0.0.1 bash create_cert.sh
+
+# 最終生成ファイル:
 # ssl_certificate:     localhost.crt
 # ssl_certificate_key: localhost.key
 # CA証明書:             localCA.crt
 
 # 参考：https://zenn.dev/jeffi7/articles/10f7b12d6044ad
-COUNTRY=jp
+
+ORGANIZATION_NAME=${ORG_NAME:-MyOrganization}
+SERVER_NAME=${SERVER_NAME:-"localhost"}
+ALT_IP=${ALT_IP:-"127.0.0.1"}
+
 STATE=Tokyo
-ORGANIZATION_NAME=MyOrganization
-COMMON_NAME=MyServerName
+COUNTRY=jp
 EMAIL=example-mail@example.com
 CA_EXPIRE_DAYS=36500
 SERVER_EXPIRE_DAYS=18250
 
-SERVER_NAME=localhost
-ALT_NAMES="IP:192.168.0.123"
-
-
+ALT_NAMES="subjectAltName = DNS:localhost, DNS:localhost.localdomain, IP:127.0.0.1"
+if [ $SERVER_NAME != "localhost" ]; then
+    ALT_NAMES=${ALT_NAMES}", DNS:${SERVER_NAME}"
+fi
+if [ $ALT_IP != "127.0.0.1" ]; then
+    ALT_NAMES=${ALT_NAMES}", IP:${ALT_IP}"
+fi
 
 # すでに作成済みなら何もせず終了
 if [ -e localhost.crt ] && [ -e localhost.key ] && [ -e localCA.crt ]; then
@@ -31,7 +42,7 @@ ${STATE}
 
 ${ORGANIZATION_NAME}
 
-${COMMON_NAME}
+${SERVER_NAME}
 ${EMAIL}
 
 
@@ -54,7 +65,7 @@ ${EMAIL}
 
 """ | openssl req -out localhost.csr -key localhost.key -new
 # SANを作成
-echo "subjectAltName = DNS:localhost, DNS:localhost.localdomain, IP:127.0.0.1, ${ALT_NAMES}" > localhost.csx
+echo ${ALT_NAMES} > localhost.csx
 # サーバー証明書を作成
 openssl x509 -req -days ${SERVER_EXPIRE_DAYS} -CA localCA.crt -CAkey localCA.key -CAcreateserial -in localhost.csr -extfile localhost.csx -out localhost.crt
 
