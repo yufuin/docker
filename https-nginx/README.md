@@ -3,7 +3,7 @@
 docker build -t https_nginx ./image
 docker run -d --rm --name https_server \
     -e ORG_NAME=MyOrgName -e SERVER_NAME=localhost -e ALT_IP=127.0.0.1 \
-    -v `pwd`/certs:/certs -v `pwd`/config/nginx:/etc/nginx/conf.d \
+    -v `pwd`/certs:/certs -v `pwd`/config/nginx/https-reverse-proxy.conf:/etc/nginx/conf.d/ \
     -p 8443:443 \
     https_nginx
 curl https://localhost:8443 --cacert `pwd`/certs/localCA.crt
@@ -20,8 +20,8 @@ docker stop https_server # stop server
             - ssl_certificate: `localhost.crt`
             - ssl_certificate_key: `localhost.key`
             - CA証明書: `localCA.crt`
-    - /etc/nginx/conf.d
-        - nginxの設定ディレクトリ．コマンド例ではあらかじめ用意してある`config/nginx/ssl.conf`ファイルを利用するようその親ディレクトリをマウントしている
+    - /etc/nginx/conf.d/...
+        - nginxの設定ディレクトリ．詳細はnginxのドキュメントを参照．
 - docker run実行時の環境変数
     - ORG_NAME
         - localCA.crt等に登録される組織名．
