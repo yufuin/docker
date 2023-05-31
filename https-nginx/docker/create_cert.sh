@@ -10,7 +10,7 @@ set -e
 
 # 参考：https://zenn.dev/jeffi7/articles/10f7b12d6044ad
 
-ORGANIZATION_NAME=${ORG_NAME:-MyOrganization}
+ORG_NAME=${ORG_NAME:-"MyOrganization"}
 SERVER_NAME=${SERVER_NAME:-"localhost"}
 ALT_IP=${ALT_IP:-"127.0.0.1"}
 
@@ -40,7 +40,7 @@ echo """\
 ${COUNTRY}
 ${STATE}
 
-${ORGANIZATION_NAME}
+${ORG_NAME}
 
 ${SERVER_NAME}
 ${EMAIL}
@@ -57,7 +57,7 @@ echo """\
 ${COUNTRY}
 ${STATE}
 
-${ORGANIZATION_NAME}
+${ORG_NAME}
 
 ${SERVER_NAME}
 ${EMAIL}
