@@ -1,0 +1,31 @@
+services:
+  https_reverse_proxy:
+    build: ./image
+    environment:
+      - ORG_NAME=MyOrgName
+      - SERVER_NAME=localhost
+      - ALT_IP=127.0.0.1
+    ports:
+      - "8443:443"
+    volumes:
+      - type: bind
+        source: ./certs
+        target: /certs
+      - type: bind
+        source: ./config/nginx/https-reverse-proxy.conf
+        target: /etc/nginx/conf.d/https-reverse-proxy.conf
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: "3"
+  #   depends_on:
+  #     - api_server
+  # api_server:
+  #   expose:
+  #     - "80"
+  #   logging:
+  #     driver: json-file
+  #     options:
+  #       max-size: 1m
+  #       max-file: "3"
