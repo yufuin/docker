@@ -1,0 +1,29 @@
+services:
+  api_server:
+    build: ./api_server
+    image: api_server
+    env_file: ./env
+    command: ["/usr/bin/env", "sh", "/start-reload.sh"]
+    ports:
+      - "8080:80"
+    volumes:
+      - type: bind
+        source: ./app
+        target: /app
+    logging:
+      options:
+        max-size: 1m
+        max-file: "3"
+    depends_on:
+      - mysql_server
+
+  mysql_server:
+    build: ../mysql_utf8
+    image: mysql_server
+    env_file: ./env
+    volumes:
+      - type: bind
+        source: ./mysql_volume
+        target: /var/lib/mysql
+
+
