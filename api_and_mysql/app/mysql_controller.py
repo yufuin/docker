@@ -21,6 +21,6 @@ def get_result(db:DB_type) -> list:
     else:
         return
 
-def debug_show1(db:DB_type):
+def show_databases(db:DB_type):
     db.query("SHOW DATABASES;")
     return get_result(db)

@@ -1,11 +1,8 @@
 import dataclasses
-from typing import Dict, Optional
-import requests
 import json
-import datetime
-import re
-import copy
 from fastapi import FastAPI, Form, Header
+
+import mysql_controller as M
 
 @dataclasses.dataclass
 class Response:
@@ -13,8 +10,10 @@ class Response:
     body: str
 
 app = FastAPI()
+db = M.connect()
 
 @app.get("/")
-def echo(body:Optional[str]=None):
-    return {"message":"hello!", "body":body}
+def echo():
+    result = M.show_databases(db)
+    return {"databases": json.dumps(result)}
 
