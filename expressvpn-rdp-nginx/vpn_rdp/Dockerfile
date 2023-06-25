@@ -27,7 +27,7 @@ EXPOSE 3389
 # ----- expressvpn -----
 # https://github.com/Misioslav/expressvpn
 ARG DEB_PATH="https://www.expressvpn.works/clients/linux/expressvpn_3.48.0.4-1_amd64.deb"
-COPY files/ /expressvpn/
+COPY vpn_files/ /expressvpn/
 
 ENV HEALTHCHECK=""
 ENV BEARER=""
@@ -51,11 +51,11 @@ RUN apt update && \
 
 
 # ----- ca cert for https -----
-COPY cert_files/ /cert_files/
+COPY cert_files/ /certs/
 RUN apt update && \
     apt install -y openssl curl nginx less && \
-    cd /cert_files && bash /cert_files/create_cert.sh && \
-    mv /cert_files/reverse-proxy.conf /etc/nginx/conf.d/
+    cd /certs && bash /certs/create_cert.sh && \
+    mv /certs/reverse-proxy.conf /etc/nginx/conf.d/
 
 # TODO
 
