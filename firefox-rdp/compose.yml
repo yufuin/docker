@@ -12,6 +12,7 @@ services:
       - type: tmpfs
         target: /tmp
     privileged: true
+    tty: true
     logging:
       driver: json-file
       options:
