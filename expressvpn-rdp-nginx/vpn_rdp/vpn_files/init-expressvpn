@@ -33,18 +33,27 @@ case "$1" in
         echo activated. wait for 3 secs...
         sleep 3
 
+        echo set preferred_protocol
         expressvpn preferences set preferred_protocol `cat /vpn_settings/preferred_protocol`
+        echo set lightway_cipher
         expressvpn preferences set lightway_cipher `cat /vpn_settings/lightway_cipher`
+        echo set send_diagnostics
         expressvpn preferences set send_diagnostics false
+        echo set block_trackers
         expressvpn preferences set block_trackers true
+        echo run uname.sh
         bash /expressvpn/uname.sh
+        echo set auto_connect
         expressvpn preferences set auto_connect true
+        echo connect
         expressvpn connect `cat /vpn_settings/server`
+        echo add whilelist if exists
         for i in $(cat /vpn_settings/whitelist_dns | sed "s/ //g" | sed "s/,/ /g")
         do
             iptables -A xvpn_dns_ip_exceptions -d ${i}/32 -p udp -m udp --dport 53 -j ACCEPT
             echo "allowing dns server traffic in iptables: ${i}"
         done
+        echo now expressvpn initialized!
     ;;
     *)
         echo "Usage: /etc/init.d/init-expressvpn {start}"
