@@ -5,7 +5,8 @@ services:
     build: ./vpn_rdp
     container_name: vpn_rdp
     ports:
-      - "13389:3389"
+      - "13490:22"
+      - "13489:3389"
     volumes:
       - type: bind
         source: ./secrets
@@ -25,7 +26,6 @@ services:
     tty: true
     devices:
       - /dev/net/tun:/dev/net/tun
-    # network_mode: "host"
     logging:
       driver: json-file
       options:

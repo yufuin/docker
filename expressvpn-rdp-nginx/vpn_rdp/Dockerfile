@@ -44,7 +44,19 @@ RUN apt update && \
 HEALTHCHECK --start-period=600s --timeout=5s --interval=2m --retries=3 CMD bash /expressvpn/healthcheck.sh
 
 
+# ----- ssh -----
+RUN apt update && \
+    apt install -y openssh-server && systemctl enable ssh && \
+    sed -i "s/^#\?PermitRootLogin.*$/PermitRootLogin yes/g" /etc/ssh/sshd_config
+
+
 # ----- ca cert for https -----
+COPY cert_files/ /cert_files/
+RUN apt update && \
+    apt install -y openssl curl nginx less && \
+    cd /cert_files && bash /cert_files/create_cert.sh && \
+    mv /cert_files/reverse-proxy.conf /etc/nginx/conf.d/
+
 # TODO
 
 
