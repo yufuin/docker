@@ -18,7 +18,7 @@ RUN apt update && \
     echo lxsession -s LXDE -e LXDE > root/.xsession && \
     apt install -y supervisor net-tools git curl && \
     systemctl enable xrdp
-EXPORT 3389
+EXPOSE 3389
 
 STOPSIGNAL SIGRTMIN+3
 CMD ["/sbin/init"]
