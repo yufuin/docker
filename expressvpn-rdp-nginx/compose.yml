@@ -1,0 +1,34 @@
+version: "3"
+services:
+  vpn_rdp:
+    image: vpn_rdp
+    build: ./vpn_rdp
+    container_name: vpn_rdp
+    ports:
+      - "13389:3389"
+    volumes:
+      - type: bind
+        source: ./secrets
+        target: /secrets
+        read_only: true
+      - type: bind
+        source: ./vpn_settings
+        target: /vpn_settings
+        read_only: true
+      - type: tmpfs
+        target: /run
+      - type: tmpfs
+        target: /run/lock
+      - type: tmpfs
+        target: /tmp
+    privileged: true
+    tty: true
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    # network_mode: "host"
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: "3"
+

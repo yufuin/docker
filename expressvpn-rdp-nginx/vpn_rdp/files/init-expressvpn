@@ -1,0 +1,53 @@
+#! /bin/sh -e
+### BEGIN INIT INFO
+# Provides:          init-expressvpn
+# Required-Start:
+# Required-Stop:
+# Default-Start:     1 2 3 4 5
+# Default-Stop:      0 6
+# Short-Description: init expressvpn
+# Description:       Init script for expressvpn
+### END INIT INFO
+#
+# Author:       "Ex Ample" <example@example.com>
+#
+set -e
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+DAEMON=/usr/sbin/init-expressvpn
+INIT_EXPRESSVPN_DIR=/run/init-expressvpn
+PIDFILE=$INIT_EXPRESSVPN_DIR/init-expressvpn.pid
+
+case "$1" in
+    start)
+        cp /etc/resolv.conf /etc/resolv.conf.bak
+        umount /etc/resolv.conf
+        cp /etc/resolv.conf.bak /etc/resolv.conf
+        rm /etc/resolv.conf.bak
+
+        expect /expressvpn/expect-start-expressvpn.sh
+        echo start expressvpn. wait for 3 secs...
+        sleep 3
+
+        expect /expressvpn/activate.sh
+        echo activated. wait for 3 secs...
+        sleep 3
+
+        expressvpn preferences set preferred_protocol `cat /vpn_settings/preferred_protocol`
+        expressvpn preferences set lightway_cipher `cat /vpn_settings/lightway_cipher`
+        expressvpn preferences set send_diagnostics false
+        expressvpn preferences set block_trackers true
+        bash /expressvpn/uname.sh
+        expressvpn preferences set auto_connect true
+        expressvpn connect `cat /vpn_settings/server`
+        for i in $(cat /vpn_settings/whitelist_dns | sed "s/ //g" | sed "s/,/ /g")
+        do
+            iptables -A xvpn_dns_ip_exceptions -d ${i}/32 -p udp -m udp --dport 53 -j ACCEPT
+            echo "allowing dns server traffic in iptables: ${i}"
+        done
+    ;;
+    *)
+        echo "Usage: /etc/init.d/init-expressvpn {start}"
+        exit 1
+        ;;
+esac
