@@ -55,9 +55,8 @@ COPY cert_files/ /certs/
 RUN apt update && \
     apt install -y openssl curl nginx less && \
     cd /certs && bash /certs/create_cert.sh && \
-    mv /certs/reverse-proxy.conf /etc/nginx/conf.d/
-
-# TODO
+    mv /certs/reverse-proxy.conf /etc/nginx/conf.d/ && \
+    mkdir /usr/share/ca-certificates/mylocal && cp /certs/localCA.crt /usr/share/ca-certificates/mylocal/localCA.crt && echo mylocal/localCA.crt >> /etc/ca-certificates.conf && update-ca-certificates
 
 
 STOPSIGNAL SIGRTMIN+3
