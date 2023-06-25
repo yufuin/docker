@@ -13,7 +13,7 @@ RUN apt update && apt install -y software-properties-common && \
 
 # xrdp
 RUN apt update && \
-    apt install -y tzdata && ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata && \
+    DEBIAN_FRONTEND=noninteractive apt install -y tzdata && ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata && \
     DEBIAN_FRONTEND=noninteractive apt install -y xrdp lxde && \
     echo lxsession -s LXDE -e LXDE > root/.xsession && \
     apt install -y supervisor net-tools git curl && \

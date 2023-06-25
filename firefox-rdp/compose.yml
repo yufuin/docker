@@ -1,0 +1,19 @@
+services:
+  firefox_rdp:
+    image: firefox_rdp
+    build: ./image
+    ports:
+      - "13389:3389"
+    volumes:
+      - type: tmpfs
+        target: /run
+      - type: tmpfs
+        target: /run/lock
+      - type: tmpfs
+        target: /tmp
+    privileged: true
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: "3"
