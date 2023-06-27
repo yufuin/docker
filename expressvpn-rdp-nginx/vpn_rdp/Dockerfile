@@ -21,6 +21,7 @@ RUN apt update && \
     DEBIAN_FRONTEND=noninteractive apt install -y xrdp lxde && \
     echo lxsession -s LXDE -e LXDE > root/.xsession && \
     apt install -y supervisor net-tools git curl && \
+    apt remove -y --purge light-locker && \
     systemctl enable xrdp
 EXPOSE 3389
 
