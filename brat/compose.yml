@@ -1,0 +1,12 @@
+version: '3'
+services:
+  brat:
+    build: ./image
+    image: yufuin/brat1.3
+    ports:
+      - "8001"
+    volumes:
+      - type: bind
+        source: ./data
+        target: /data
+        read_only: true
