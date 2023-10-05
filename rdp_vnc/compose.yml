@@ -1,0 +1,26 @@
+services:
+  rdp_vnc:
+    image: rdp_vnc
+    build: ./image
+    container_name: rdp_vnc
+    ports:
+      - "22"
+      - "3389"
+      - "8081"
+    volumes:
+      - type: bind
+        source: ./secrets
+        target: /secrets
+        read_only: true
+      - type: bind
+        source: ./vnc_settings
+        target: /vnc_settings
+        read_only: true
+      - type: tmpfs
+        target: /run
+      - type: tmpfs
+        target: /run/lock
+      - type: tmpfs
+        target: /tmp
+    privileged: true
+    tty: true

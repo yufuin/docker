@@ -1,0 +1,16 @@
+# 参考: https://k-kuro.hatenadiary.jp/entry/20200816/1597549548
+[Unit]
+Description=Remote desktop service (VNC)
+After=syslog.target network.target
+
+[Service]
+Type=simple
+RemainAfterExit=true
+
+# Clean any existing files in /tmp/.X11-unix environment
+ExecStartPre=/bin/sh -c '/usr/bin/vncserver -kill :%i > /dev/null 2>&1 || :'
+ExecStart=/bin/sh -c 'printf "`cat /secrets/vnc_password | tr -d \"\\n\"`\\n`cat /secrets/vnc_password | tr -d \"\\n\"`\\nn\\n" | HOME=/root /usr/bin/vncserver :%i -geometry `cat /vnc_settings/geometry | tr -d "\\n"` -depth 24 -localhost; websockify -D --web=/usr/share/novnc/ `python3 -c "print(8080+%i)"` localhost:`python3 -c "print(5900+%i)"`'
+ExecStop=/bin/sh -c '/usr/bin/vncserver -kill :%i > /dev/null 2>&1 || :'
+
+[Install]
+WantedBy=multi-user.target

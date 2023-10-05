@@ -1,0 +1,32 @@
+#! /bin/sh -e
+### BEGIN INIT INFO
+# Provides:          ch-root-passwd
+# Required-Start:    $time $local_fs $remote_fs
+# Required-Stop:     $time $local_fs $remote_fs
+# Default-Start:     1 2 3 4 5
+# Default-Stop:      0 6
+# Short-Description: init root's password at start-up
+# Description:       Init root's password at start-up
+### END INIT INFO
+#
+# Author:	"Example" <example@example.com>
+#
+set -e
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+DAEMON=/usr/sbin/ch-root-passwd
+CH_ROOT_PASSWD_DIR=/run/ch-root-passwd
+PIDFILE=$CH_ROOT_PASSWD_DIR/ch-root-passwd.pid
+
+case "$1" in
+    start)
+        PASSWORD=`cat /secrets/root_password | tr -d "\n"`
+        printf "${PASSWORD}\n${PASSWORD}\n" | passwd
+        echo "password changed"
+        exit 0
+        ;;
+    *)
+        echo "Usage: /etc/init.d/ch-root-passwd {start}"
+        exit 1
+        ;;
+esac
