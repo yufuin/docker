@@ -1,0 +1,16 @@
+services:
+  ch_passwd:
+    build: ./image
+    ports:
+      - "22"
+    volumes:
+      - type: bind
+        source: ./secrets
+        target: /secrets
+        read_only: true
+      - type: tmpfs
+        target: /run
+      - type: tmpfs
+        target: /run/lock
+    tty: true
+    privileged: true
