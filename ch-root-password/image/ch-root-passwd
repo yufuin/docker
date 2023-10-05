@@ -20,7 +20,7 @@ PIDFILE=$CH_ROOT_PASSWD_DIR/ch-root-passwd.pid
 
 case "$1" in
     start)
-        PASSWORD=`python3 -c "print(open('/secrets/password').readline().strip(), end='')"`
+        PASSWORD=`cat /secrets/password | tr -d "\n"`
         printf "${PASSWORD}\n${PASSWORD}\n" | passwd
         echo "password changed"
         exit 0
